@@ -133,6 +133,9 @@ void processLine(std::string line, Program &program, EvalState &state) {
                 } catch (std::runtime_error &ex) {
                     // END statement
                     break;
+                } catch (ErrorException &ex) {
+                    // Error during execution, propagate it
+                    throw;
                 }
             }
         } else if (token == "LIST") {

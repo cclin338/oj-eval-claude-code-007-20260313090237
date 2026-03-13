@@ -69,7 +69,10 @@ void InputStatement::execute(EvalState &state, Program &program) {
     std::cout << " ? ";
     std::string line;
     while (true) {
-        getline(std::cin, line);
+        if (!getline(std::cin, line)) {
+            // EOF reached
+            exit(0);
+        }
         TokenScanner scanner;
         scanner.ignoreWhitespace();
         scanner.scanNumbers();
@@ -123,7 +126,8 @@ void GotoStatement::execute(EvalState &state, Program &program) {
 
 // IF statement
 IfStatement::IfStatement(TokenScanner &scanner) {
-    lhs = readE(scanner, 0);
+    // Read LHS expression, stopping before comparison operators (precedence 2)
+    lhs = readE(scanner, 1);
 
     std::string oper = scanner.nextToken();
     if (oper != "=" && oper != "<" && oper != ">") {
@@ -131,7 +135,8 @@ IfStatement::IfStatement(TokenScanner &scanner) {
     }
     op = oper;
 
-    rhs = readE(scanner, 0);
+   // Read RHS expression, stopping before THEN
+    rhs = readE(scanner, 1);
 
     std::string then = scanner.nextToken();
     if (then != "THEN") {
