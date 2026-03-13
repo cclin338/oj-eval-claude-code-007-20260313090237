@@ -1,64 +1,82 @@
 /*
  * File: program.cpp
  * -----------------
- * This file is a stub implementation of the program.h interface
- * in which none of the methods do anything beyond returning a
- * value of the correct type.  Your job is to fill in the bodies
- * of each of these methods with an implementation that satisfies
- * the performance guarantees specified in the assignment.
+ * This file implements the program.h interface.
  */
 
 #include "program.hpp"
 
+Program::Program() {
+}
 
-
-Program::Program() = default;
-
-Program::~Program() = default;
+Program::~Program() {
+    clear();
+}
 
 void Program::clear() {
-    // Replace this stub with your own code
-    //todo
+    // Delete all parsed statements
+    for (auto &pair : parsedStatements) {
+        delete pair.second;
+    }
+    parsedStatements.clear();
+    sourceLines.clear();
 }
 
 void Program::addSourceLine(int lineNumber, const std::string &line) {
-    // Replace this stub with your own code
-    //todo
+    // If line already exists, remove the old parsed statement
+    if (parsedStatements.find(lineNumber) != parsedStatements.end()) {
+        delete parsedStatements[lineNumber];
+        parsedStatements.erase(lineNumber);
+    }
+    sourceLines[lineNumber] = line;
 }
 
 void Program::removeSourceLine(int lineNumber) {
-    // Replace this stub with your own code
-    //todo
+    // Remove the source line
+    sourceLines.erase(lineNumber);
+    // Remove and delete the parsed statement
+    if (parsedStatements.find(lineNumber) != parsedStatements.end()) {
+        delete parsedStatements[lineNumber];
+        parsedStatements.erase(lineNumber);
+    }
 }
 
 std::string Program::getSourceLine(int lineNumber) {
-    // Replace this stub with your own code
-    //todo
+    if (sourceLines.find(lineNumber) != sourceLines.end()) {
+        return sourceLines[lineNumber];
+    }
+    return "";
 }
 
 void Program::setParsedStatement(int lineNumber, Statement *stmt) {
-    // Replace this stub with your own code
-    //todo
+    // If there's already a parsed statement, delete it
+    if (parsedStatements.find(lineNumber) != parsedStatements.end()) {
+        delete parsedStatements[lineNumber];
+    }
+    parsedStatements[lineNumber] = stmt;
 }
 
-//void Program::removeSourceLine(int lineNumber) {
-
 Statement *Program::getParsedStatement(int lineNumber) {
-   // Replace this stub with your own code
-   //todo
+    if (parsedStatements.find(lineNumber) != parsedStatements.end()) {
+        return parsedStatements[lineNumber];
+    }
+    return nullptr;
 }
 
 int Program::getFirstLineNumber() {
-    // Replace this stub with your own code
-    //todo
+    if (sourceLines.empty()) {
+        return -1;
+    }
+    return sourceLines.begin()->first;
 }
 
 int Program::getNextLineNumber(int lineNumber) {
-    // Replace this stub with your own code
-    //todo
+    auto it = sourceLines.find(lineNumber);
+    if (it != sourceLines.end()) {
+        ++it;
+        if (it != sourceLines.end()) {
+            return it->first;
+        }
+    }
+    return -1;
 }
-
-//more func to add
-//todo
-
-

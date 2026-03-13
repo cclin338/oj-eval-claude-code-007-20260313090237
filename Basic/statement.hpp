@@ -85,4 +85,73 @@ public:
  * specify its own destructor method to free that memory.
  */
 
+// REM statement
+class RemStatement : public Statement {
+public:
+    RemStatement(TokenScanner &scanner);
+    virtual ~RemStatement();
+    virtual void execute(EvalState &state, Program &program);
+};
+
+// LET statement
+class LetStatement : public Statement {
+public:
+    LetStatement(TokenScanner &scanner);
+    virtual ~LetStatement();
+    virtual void execute(EvalState &state, Program &program);
+private:
+    Expression *exp;
+};
+
+// PRINT statement
+class PrintStatement : public Statement {
+public:
+    PrintStatement(TokenScanner &scanner);
+    virtual ~PrintStatement();
+    virtual void execute(EvalState &state, Program &program);
+private:
+    Expression *exp;
+};
+
+// INPUT statement
+class InputStatement : public Statement {
+public:
+    InputStatement(TokenScanner &scanner);
+    virtual ~InputStatement();
+    virtual void execute(EvalState &state, Program &program);
+private:
+    std::string var;
+};
+
+// END statement
+class EndStatement : public Statement {
+public:
+    EndStatement(TokenScanner &scanner);
+    virtual ~EndStatement();
+    virtual void execute(EvalState &state, Program &program);
+};
+
+// GOTO statement
+class GotoStatement : public Statement {
+public:
+    GotoStatement(TokenScanner &scanner);
+    virtual ~GotoStatement();
+    virtual void execute(EvalState &state, Program &program);
+private:
+    int targetLine;
+};
+
+// IF statement
+class IfStatement : public Statement {
+public:
+    IfStatement(TokenScanner &scanner);
+    virtual ~IfStatement();
+    virtual void execute(EvalState &state, Program &program);
+private:
+    Expression *lhs;
+    Expression *rhs;
+    std::string op;
+    int targetLine;
+};
+
 #endif
